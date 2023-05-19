@@ -20,7 +20,7 @@ function RequestAccessToken({ code, codeVerifier }: RequestAccessTokenArgs) {
       });
       
       // This request generates an error, seemingly due to CORS
-      const response = await fetch("https://accounts.spotify.com/api/token/", {
+      const response = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

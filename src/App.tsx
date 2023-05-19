@@ -1,9 +1,16 @@
 import Login from "./components/Login";
-import RequestAccessToken from "./components/RequestAccessToken";
+import { useCookies } from "react-cookie";
+// import RequestAccessToken from "./components/RequestAccessToken";
+
 function App() {
   let view;
+  const [cookies] = useCookies([
+    "accessToken",
+    "codeVerifier",
+    "state",
+  ]);
 
-  if (localStorage.getItem("accessToken") !== null) {
+  if (cookies.accessToken !== undefined) {
     // User logged in
     view = (
       <>
@@ -22,7 +29,7 @@ function App() {
           <Login />
         </>
       );
-    } else if (state != localStorage.getItem("state")) {
+    } else if (state !== cookies.state) {
       // State incorrect, potential cross-site forgery
       view = (
         <>
@@ -30,9 +37,9 @@ function App() {
         </>
       );
     } else {
-      const codeVerifier = localStorage.getItem("codeVerifier");
+      const codeVerifier = cookies.codeVerifier;
 
-      if (codeVerifier == null) {
+      if (codeVerifier === undefined) {
         // codeVerifier not stored, likely a bug in Login component
         view = (
           <>
@@ -42,7 +49,11 @@ function App() {
       } else {
         view = (
           <>
-            <RequestAccessToken code={code} codeVerifier={codeVerifier} />
+            <h1>Code</h1>
+            <div>{code}</div>
+            <h1>Code Verifier</h1>
+            <div>{codeVerifier}</div>
+            {/* <RequestAccessToken code={code} codeVerifier={codeVerifier} /> */}
           </>
         );
       }
