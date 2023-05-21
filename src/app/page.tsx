@@ -1,32 +1,57 @@
-"use client";
+import Login from "@/components/Login";
+import { cookies } from "next/headers";
 
-import { getSession, signIn, signOut, useSession } from "next-auth/react";
-// import authOptions from "./api/auth/[...nextauth]/authOptions";
+async function Page({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | undefined };
+}) {
+  const cookieStore = cookies();
+  const authToken = cookieStore.get("authToken");
+  const codeVerifier = cookieStore.get("codeVerifier");
+  const state = cookieStore.get("state");
 
-async function Page() {
-  const { data: session, status } = useSession();
-  // const session = await getSession();
+  // If this is a redirect from the Spotify Authentication page
+  if (searchParams && searchParams.code && searchParams.state) {
+    // If the codeVerifier or the state were not stored as cookies
+    if (!state || !codeVerifier) {
+      return <>Error: state or codeVerifier not found in cookies</>;
+    }
 
-  let view;
+    // If the states do not match
+    if (searchParams.state != state.value) {
+      return <>Error: States do not match. Potential cross-site forgery</>;
+    }
 
-  if (status === "authenticated") {
-  // if (session) {
-    view = (
-      <>
-        Signed in as {session.user.name} <br />
-        <button onClick={() => signOut()}>Sign Out</button>
-      </>
+    const body = JSON.stringify({
+      code: searchParams.code,
+      codeVerifier: codeVerifier.value,
+    });
+
+    const response = await fetch(
+      process.env.NEXT_PUBLIC_CANONICAL_URL + "/api/token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+        body: body,
+      }
     );
-  } else {
-    view = (
-      <>
-        Not signed in <br />
-        <button onClick={() => signIn("spotify")}>Sign In</button>
-      </>
-    );
+
+    if (!response.ok) {
+      return <>Error: {response.status} - {response.statusText}</>;
+    }
+
+    return <>{JSON.stringify(await response.json())}</>;
   }
 
-  return <>{view}</>;
+  if (!authToken) {
+    return <Login />;
+  }
+
+  return <>Logged In</>;
 }
 
 export default Page;
