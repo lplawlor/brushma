@@ -1,3 +1,4 @@
+import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 
 /**
@@ -8,7 +9,7 @@ import jwt from "jsonwebtoken";
  * @param request Request object containing code and codeVerifier as body parameters
  * @returns Response object containing JWT on success
  */
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const { code, codeVerifier } = await request.json();
 
   const body = new URLSearchParams({
@@ -36,15 +37,15 @@ export async function POST(request: Request) {
     return spotifyResponse;
   }
 
-  // Extract the response body and sign it as a JWT using a secret key
-  const responseBody = await spotifyResponse.json();
-  const bodyAsJWT = jwt.sign(
-    JSON.stringify(responseBody),
+  // Extract the access token from the response body and sign it as a JWT using a secret key
+  const accessToken = (await spotifyResponse.json()).access_token;
+  const accessTokenJWT = jwt.sign(
+    accessToken,
     process.env.JWT_SECRET
   );
 
   // Repackage the JWT as a successful response (HTTP status 200)
-  return new Response(bodyAsJWT, {
+  return new NextResponse(accessTokenJWT, {
     status: 200,
   });
 }

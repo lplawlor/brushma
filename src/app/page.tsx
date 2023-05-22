@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import Login from "@/components/Login";
 import SpotifyRedirectHandler from "@/components/SpotifyRedirectHandler";
+import UserInfo from "@/components/UserInfo";
 
 async function Page({
   searchParams,
@@ -8,18 +9,23 @@ async function Page({
   searchParams?: { [key: string]: string | undefined };
 }) {
   const cookieStore = cookies();
-  const accessTokenJWT = cookieStore.get("accessTokenJWT");
+  const accessTokenJWTCookie = cookieStore.get("accessTokenJWT");
 
   // If this is a redirect from the Spotify Authentication page
   if (searchParams && searchParams.state && searchParams.code) {
-    return <SpotifyRedirectHandler returnState={searchParams.state} returnCode={searchParams.code}/>
+    return (
+      <SpotifyRedirectHandler
+        returnState={searchParams.state}
+        returnCode={searchParams.code}
+      />
+    );
   }
 
-  if (!accessTokenJWT) {
+  if (!accessTokenJWTCookie) {
     return <Login />;
   }
 
-  return <>Logged In - JWT: {accessTokenJWT.value}</>;
+  return <UserInfo accessTokenJWT={accessTokenJWTCookie.value}/>;
 }
 
 export default Page;

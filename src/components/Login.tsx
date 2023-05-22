@@ -1,6 +1,6 @@
 "use client";
 
-import { requestUserAuthorization } from "@/helpers/authentication";
+import { requestUserAuthorization } from "@/helpers/authorization";
 
 function Login() {
   const scope = "playlist-read-private playlist-modify-private";

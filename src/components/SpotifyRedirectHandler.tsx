@@ -49,12 +49,16 @@ function SpotifyRedirectHandler({
       );
 
       if (!response.ok) {
-        return "/?error=spotify-error" + response.status;
+        return "/?error=spotify-error-" + response.status;
       }
 
       const universalCookies = new Cookies();
 
-      universalCookies.set("accessTokenJWT", await response.text());
+      universalCookies.set("accessTokenJWT", await response.text(), {
+        path: "/",
+        maxAge: 3540,
+        sameSite: "lax",
+      });
 
       return "/";
     }
@@ -65,7 +69,7 @@ function SpotifyRedirectHandler({
   }, [returnState, returnCode, state, codeVerifier]);
 
   if (!redirectPath) {
-    return <>Loading...</>;
+    return <>Fetching Access Token...</>;
   }
 
   redirect(redirectPath);
