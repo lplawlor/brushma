@@ -1,5 +1,13 @@
 import jwt from "jsonwebtoken";
 
+/**
+ * Request an access token from Spotify using authorization code and code verifier.
+ * If the request to Spotify's API is unsuccessful, the response is returned as-is.
+ * If successful, its body is signed as a JWT string and returned.
+ *
+ * @param request Request object containing code and codeVerifier as body parameters
+ * @returns Response object containing JWT on success
+ */
 export async function POST(request: Request) {
   const { code, codeVerifier } = await request.json();
 
@@ -11,23 +19,31 @@ export async function POST(request: Request) {
     code_verifier: codeVerifier,
   });
 
-  const response = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: body,
-  });
+  const spotifyResponse = await fetch(
+    "https://accounts.spotify.com/api/token",
+    {
+      method: "POST",
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: body,
+    }
+  );
 
-  if (!response.ok) {
-    return response;
+  // If the call to the Spotify token API results in an error, return the response as-is
+  if (!spotifyResponse.ok) {
+    return spotifyResponse;
   }
 
-  const responseBody = await response.json();
+  // Extract the response body and sign it as a JWT using a secret key
+  const responseBody = await spotifyResponse.json();
+  const bodyAsJWT = jwt.sign(
+    JSON.stringify(responseBody),
+    process.env.JWT_SECRET
+  );
 
-  const bodyAsJWT = jwt.sign(JSON.stringify(responseBody), process.env.JWT_SECRET);
-
+  // Repackage the JWT as a successful response (HTTP status 200)
   return new Response(bodyAsJWT, {
     status: 200,
   });

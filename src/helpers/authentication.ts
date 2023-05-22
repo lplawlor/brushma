@@ -89,11 +89,11 @@ export async function requestUserAuthorization(
   const state = randomAlphanumString(16);
 
   // Store the codeVerifier and state as cookies, as we will need them after the redirect
-  const cookies = new Cookies();
-  cookies.set("codeVerifier", codeVerifier, {
+  const universalCookies = new Cookies();
+  universalCookies.set("codeVerifier", codeVerifier, {
     path: "/",
   });
-  cookies.set("state", state, {
+  universalCookies.set("state", state, {
     path: "/",
   });
 
