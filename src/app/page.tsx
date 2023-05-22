@@ -44,7 +44,7 @@ async function Page({
       return <>Error: {response.status} - {response.statusText}</>;
     }
 
-    return <>{JSON.stringify(await response.json())}</>;
+    return <>{await response.text()}</>;
   }
 
   if (!authToken) {

@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+
 export async function POST(request: Request) {
   const { code, codeVerifier } = await request.json();
 
@@ -9,7 +11,6 @@ export async function POST(request: Request) {
     code_verifier: codeVerifier,
   });
 
-
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: "POST",
     cache: "no-store",
@@ -19,5 +20,15 @@ export async function POST(request: Request) {
     body: body,
   });
 
-  return response;
+  if (!response.ok) {
+    return response;
+  }
+
+  const responseBody = await response.json();
+
+  const bodyAsJWT = jwt.sign(JSON.stringify(responseBody), process.env.JWT_SECRET);
+
+  return new Response(bodyAsJWT, {
+    status: 200,
+  });
 }
