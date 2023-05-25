@@ -10,10 +10,6 @@ async function Tracks({
   minLength: number;
   maxLength: number;
 }) {
-  if (accessTokenJWT == null) {
-    return <>Error: accessCodeJWT is Null</>;
-  }
-
   let accessToken;
 
   try {

@@ -2,10 +2,6 @@ import { User, getUserInfo } from "@/helpers/user";
 import jwt from "jsonwebtoken";
 
 async function UserInfo({ accessTokenJWT }: { accessTokenJWT: string }) {
-  if (accessTokenJWT == null) {
-    return <>Error: accessCodeJWT is Null</>;
-  }
-
   let accessToken;
 
   try {
