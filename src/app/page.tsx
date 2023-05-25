@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import Login from "@/components/Login";
 import SpotifyRedirectHandler from "@/components/SpotifyRedirectHandler";
 import UserInfo from "@/components/UserInfo";
+import Tracks from "@/components/Tracks";
 
 async function Page({
   searchParams,
@@ -25,7 +26,14 @@ async function Page({
     return <Login />;
   }
 
-  return <UserInfo accessTokenJWT={accessTokenJWTCookie.value}/>;
+  return (
+    /* @ts-expect-error Async Server Component */
+    <Tracks
+      accessTokenJWT={accessTokenJWTCookie.value}
+      minLength={120000}
+      maxLength={135000}
+    />
+  );
 }
 
 export default Page;

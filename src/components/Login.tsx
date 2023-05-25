@@ -3,7 +3,7 @@
 import { requestUserAuthorization } from "@/helpers/authorization";
 
 function Login() {
-  const scope = "playlist-read-private playlist-modify-private";
+  const scope = "playlist-modify-private user-library-read";
 
   return (
     <button
