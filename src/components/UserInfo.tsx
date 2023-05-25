@@ -1,5 +1,7 @@
+import Image from "next/image";
 import { User, getUserInfo } from "@/helpers/user";
 import jwt from "jsonwebtoken";
+import DefaultProfilePic from "@/assets/profile_pic.png";
 
 async function UserInfo({ accessTokenJWT }: { accessTokenJWT: string }) {
   let accessToken;
@@ -22,7 +24,12 @@ async function UserInfo({ accessTokenJWT }: { accessTokenJWT: string }) {
   return (
     <>
       <p>Logged in as {user.display_name}</p>
-      {/* <Image src={user.images[0].url} alt="Profile picture" height={500} /> */}
+      <Image
+        src={user.image_url == null ? DefaultProfilePic : user.image_url}
+        alt="Profile picture"
+        height={100}
+        width={100}
+      />
       <p>URI: {user.uri}</p>
     </>
   );
