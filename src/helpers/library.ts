@@ -35,7 +35,7 @@ interface SpotifyTrack {
   is_local: boolean;
 }
 
-interface SpotifyResponseBody {
+interface TracksResponseBody {
   // ...
   next: string;
   // ...
@@ -122,7 +122,7 @@ export async function getFilteredLibrary(
     }
 
     const spotifyResponseBody =
-      (await spotifyResponse.json()) as SpotifyResponseBody;
+      (await spotifyResponse.json()) as TracksResponseBody;
 
     nextPage = spotifyResponseBody.next;
 

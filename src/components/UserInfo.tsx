@@ -1,48 +1,26 @@
-"use client";
+import { User, getUserInfo } from "@/helpers/user";
+import jwt from "jsonwebtoken";
 
-// import Image from "next/image";
-import { useEffect, useState } from "react";
+async function UserInfo({ accessTokenJWT }: { accessTokenJWT: string }) {
+  if (accessTokenJWT == null) {
+    return <>Error: accessCodeJWT is Null</>;
+  }
 
-// interface ImageObject {
-//   url: string;
-//   height: null | number;
-//   width: null | number;
-// }
+  let accessToken;
 
-interface User {
-  display_name: string;
-  id: string;
-  // images: [ImageObject];
-  uri: string;
-}
+  try {
+    // Verify (decode) the accessToken using the secret key
+    accessToken = jwt.verify(accessTokenJWT, process.env.JWT_SECRET) as string;
+  } catch (error) {
+    return <>Error: Could not verfiy accessTokenJWT</>;
+  }
 
-function UserInfo({ accessTokenJWT }: { accessTokenJWT: string }) {
-  const [user, setUser] = useState<User>();
+  let user;
 
-  useEffect(() => {
-    async function fetchToken(accessTokenJWT: string) {
-      const response = await fetch(
-        process.env.NEXT_PUBLIC_CANONICAL_URL +
-          "/api/user/?accessTokenJWT=" +
-          accessTokenJWT,
-        {
-          method: "GET",
-          cache: "no-store",
-        }
-      );
-
-      if (!response.ok) {
-        return "/?error=spotify-error-" + response.status;
-      }
-
-      setUser(await response.json());
-    }
-
-    fetchToken(accessTokenJWT);
-  }, [accessTokenJWT]);
-
-  if (!user) {
-    return <>Fetching User Info...</>;
+  try {
+    user = (await getUserInfo(accessToken)) as User;
+  } catch (error) {
+    return <>Error: Could not fetch user info</>;
   }
 
   return (

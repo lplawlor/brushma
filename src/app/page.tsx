@@ -28,11 +28,12 @@ async function Page({
 
   return (
     /* @ts-expect-error Async Server Component */
-    <Tracks
-      accessTokenJWT={accessTokenJWTCookie.value}
-      minLength={120000}
-      maxLength={135000}
-    />
+    <UserInfo accessTokenJWT={accessTokenJWTCookie.value} />
+    // <Tracks
+    //   accessTokenJWT={accessTokenJWTCookie.value}
+    //   minLength={120000}
+    //   maxLength={135000}
+    // />
   );
 }
 
