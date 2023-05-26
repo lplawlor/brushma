@@ -5,6 +5,7 @@
  *  - https://stackblitz.com/edit/typescript-sha256-base64-encoded-4sbjzv?file=index.ts
  *  - https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
  */
+import "client-only";
 import Cookies from "universal-cookie";
 
 /**
@@ -92,9 +93,13 @@ export async function requestUserAuthorization(
   const universalCookies = new Cookies();
   universalCookies.set("codeVerifier", codeVerifier, {
     path: "/",
+    maxAge: 3540,
+    sameSite: "lax",
   });
   universalCookies.set("state", state, {
     path: "/",
+    maxAge: 3540,
+    sameSite: "lax",
   });
 
   // Prepare the URL parameters needed to get the user's authorization
@@ -113,4 +118,49 @@ export async function requestUserAuthorization(
   // https://github.com/microsoft/TypeScript/issues/48949#issuecomment-1203967132
   (window as Window).location =
     "https://accounts.spotify.com/authorize?" + args;
+}
+
+/**
+ * Fetch the access token in JWT form via a POST request and save it as a cookie.
+ * This is the final step in the "Authorization Code with PKCE Flow" process.
+ *
+ * @param code code returned from Spotify authorization page redirect
+ * @param codeVerifier verifier generated prior to redirecting to Spotify
+ * @returns the accessTokenJWT which was saved as a cookie
+ */
+export async function fetchAccessTokenJWT(
+  code: string,
+  codeVerifier: string
+): Promise<string> {
+  const body = JSON.stringify({
+    code: code,
+    codeVerifier: codeVerifier,
+  });
+
+  const endpoint = process.env.NEXT_PUBLIC_CANONICAL_URL + "api/token";
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: "no-store",
+    body: body,
+  });
+
+  if (!response.ok) {
+    throw Error("Error " + response.status + " on GET " + "");
+  }
+
+  const accessTokenJWT = await response.text();
+
+  const universalCookies = new Cookies();
+
+  universalCookies.set("accessTokenJWT", accessTokenJWT, {
+    path: "/",
+    maxAge: 3540,
+    sameSite: "lax",
+  });
+
+  return accessTokenJWT;
 }

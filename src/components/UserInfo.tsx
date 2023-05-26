@@ -1,26 +1,8 @@
 import Image from "next/image";
-import { User, getUserInfo } from "@/helpers/user";
-import jwt from "jsonwebtoken";
+import { User } from "@/helpers/user";
 import DefaultProfilePic from "@/assets/profile_pic.png";
 
-async function UserInfo({ accessTokenJWT }: { accessTokenJWT: string }) {
-  let accessToken;
-
-  try {
-    // Verify (decode) the accessToken using the secret key
-    accessToken = jwt.verify(accessTokenJWT, process.env.JWT_SECRET) as string;
-  } catch (error) {
-    return <>Error: Could not verfiy accessTokenJWT</>;
-  }
-
-  let user;
-
-  try {
-    user = (await getUserInfo(accessToken)) as User;
-  } catch (error) {
-    return <>Error: Could not fetch user info</>;
-  }
-
+async function UserInfo({user}: { user: User}) {
   return (
     <>
       <p>Logged in as {user.display_name}</p>
