@@ -1,8 +1,7 @@
 import { cookies } from "next/headers";
-import Login from "@/components/Login";
 import SpotifyRedirectHandler from "@/components/SpotifyRedirectHandler";
-import UserInfo from "@/components/UserInfo";
-import Tracks from "@/components/Tracks";
+import Home from "@/components/Home";
+import PlaylistGenerator from "@/components/PlaylistGenerator";
 
 async function Page({
   searchParams,
@@ -23,17 +22,11 @@ async function Page({
   }
 
   if (!accessTokenJWTCookie) {
-    return <Login />;
+    return <Home />;
   }
 
   return (
-    /* @ts-expect-error Async Server Component */
-    <UserInfo accessTokenJWT={accessTokenJWTCookie.value} />
-    // <Tracks
-    //   accessTokenJWT={accessTokenJWTCookie.value}
-    //   minLength={120000}
-    //   maxLength={135000}
-    // />
+    <PlaylistGenerator accessTokenJWT={accessTokenJWTCookie.value}/>
   );
 }
 

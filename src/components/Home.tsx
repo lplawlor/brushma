@@ -2,7 +2,7 @@
 
 import { requestUserAuthorization } from "@/helpers/authorization";
 
-function Login() {
+function Home() {
   const scope = "playlist-modify-private user-library-read";
 
   return (
@@ -20,4 +20,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Home;
