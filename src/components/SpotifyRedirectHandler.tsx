@@ -37,7 +37,7 @@ function SpotifyRedirectHandler({
       });
 
       const response = await fetch(
-        process.env.NEXT_PUBLIC_CANONICAL_URL + "/api/token",
+        process.env.NEXT_PUBLIC_CANONICAL_URL + "api/token",
         {
           method: "POST",
           headers: {

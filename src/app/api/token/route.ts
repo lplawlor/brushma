@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   const body = new URLSearchParams({
     grant_type: "authorization_code",
     code: code,
-    redirect_uri: process.env.NEXT_PUBLIC_CANONICAL_URL,
+    redirect_uri: process.env.NEXT_PUBLIC_CANONICAL_URL + "spotify-redirect",
     client_id: process.env.NEXT_PUBLIC_SPOTIFY_ID,
     code_verifier: codeVerifier,
   });

@@ -11,7 +11,7 @@ function Home() {
         requestUserAuthorization(
           process.env.NEXT_PUBLIC_SPOTIFY_ID,
           scope,
-          process.env.NEXT_PUBLIC_CANONICAL_URL
+          process.env.NEXT_PUBLIC_CANONICAL_URL + "spotify-redirect"
         )
       }
     >
