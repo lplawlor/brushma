@@ -10,15 +10,15 @@ interface ImageObject {
 export interface SpotifyUser {
   display_name: string;
   // ...
-  images: [ImageObject];
+  id: string;
   // ...
-  uri: string;
+  images: [ImageObject];
 }
 
 export interface User {
   display_name: string;
+  id: string;
   image_url: null | string;
-  uri: string;
 }
 
 /**
@@ -48,8 +48,8 @@ export async function fetchUser(accessTokenJWT: string): Promise<User> {
 
   const thisUser = {
       display_name: responseBody.display_name,
+      id: responseBody.id,
       image_url: profilePic,
-      uri: responseBody.uri,
     };
 
   // Extract and return just the necessary info from the response

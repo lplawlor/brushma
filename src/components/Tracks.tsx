@@ -29,8 +29,8 @@ async function Tracks({
 
   const tracksJSX = tracks.map((track) => {
     return (
-      <p key={track.uri}>
-        {track.title} - {track.artist_names[0]} - {track.album_name} - {track.uri}
+      <p key={track.id}>
+        {track.title} - {track.artist_names[0]} - {track.album_name} - {track.id}
       </p>
     );
   });

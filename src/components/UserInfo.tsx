@@ -12,7 +12,7 @@ async function UserInfo({user}: { user: User}) {
         height={100}
         width={100}
       />
-      <p>URI: {user.uri}</p>
+      <p>ID: {user.id}</p>
     </>
   );
 }

@@ -29,9 +29,10 @@ interface SpotifyTrack {
     spotify: string;
   };
   // ...
+  id: string;
+  // ...
   name: string;
   // ...
-  uri: string;
   is_local: boolean;
 }
 
@@ -56,8 +57,8 @@ export interface SimplifiedTrack {
   album_name: string;
   artist_names: string[];
   duration_ms: number;
+  id: string;
   url: string;
-  uri: string;
 }
 
 /**
@@ -78,8 +79,8 @@ function simplifyTrack(track: SpotifyTrack): SimplifiedTrack {
     album_name: track.album.name,
     artist_names: artist_names,
     duration_ms: track.duration_ms,
+    id: track.id,
     url: track.external_urls.spotify,
-    uri: track.uri,
   };
 }
 
