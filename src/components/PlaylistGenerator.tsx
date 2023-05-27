@@ -16,6 +16,7 @@ function PlaylistGenerator({
       {/*  @ts-expect-error Async Server Component */}
       <Tracks
         accessTokenJWT={accessTokenJWT}
+        userID={user.id}
         minLength={120000}
         maxLength={135000}
       />
