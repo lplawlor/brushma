@@ -1,23 +1,42 @@
-import { redirect } from "next/navigation";
-import SpotifyRedirectHandler from "@/components/SpotifyRedirectHandler";
+"use client";
 
-async function Page({
+import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import Cookies from "universal-cookie";
+import { fetchAccessTokenJWT } from "@/helpers/authorization";
+import { fetchUser } from "@/helpers/user";
+
+function Page({
   searchParams,
 }: {
-  searchParams?: { [key: string]: string | undefined };
+  searchParams: { [key: string]: string | undefined };
 }) {
-  // If the following aren't present, this is not a valid redirect
-  // from Spotify, or the user did not give authorization
-  if (!searchParams || !searchParams.state || !searchParams.code) {
+  const [complete, setComplete] = useState(false);
+  const universalCookies = new Cookies();
+  const codeVerifier = universalCookies.get("codeVerifier");
+  const state = universalCookies.get("state");
+
+  useEffect(() => {
+    // If the following aren't present, this is not a valid redirect
+    // from Spotify, or the user did not give authorization
+    if (!searchParams.state || !searchParams.code) {
+      throw Error("Query parameters 'state' and/or 'code missing.")
+    }
+
+    if (searchParams.state != state) {
+      throw Error("States do not match.")
+    }
+
+    fetchAccessTokenJWT(searchParams.code, codeVerifier)
+      .then(fetchUser)
+      .then(() => {
+        setComplete(true);
+      })
+  }, [searchParams, state, codeVerifier]);
+
+  if (complete) {
     redirect("/");
   }
-
-  return (
-    <SpotifyRedirectHandler
-      returnState={searchParams.state}
-      returnCode={searchParams.code}
-    />
-  );
 }
 
 export default Page;
