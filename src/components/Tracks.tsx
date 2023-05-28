@@ -1,4 +1,4 @@
-import { SimplifiedTrack, getFilteredLibrary } from "@/helpers/library";
+import { getFilteredLibrary } from "@/helpers/library";
 import { createPlaylist, populatePlaylist } from "@/helpers/playlist";
 import jwt from "jsonwebtoken";
 
@@ -22,27 +22,15 @@ async function Tracks({
     return <>Error: Could not verfiy accessTokenJWT</>;
   }
 
-  let tracks;
+  const tracks = await getFilteredLibrary(accessToken, minLength, maxLength);
 
-  try {
-    tracks = await getFilteredLibrary(accessToken, minLength, maxLength);
-  } catch (error) {
-    return <>Error: Could not filter library</>;
+  if (tracks.length == 0) {
+    throw Error("No tracks in given range found.");
   }
 
-  let playlistID;
+  const playlistID = await createPlaylist(accessToken, userID);
 
-  try {
-    playlistID = await createPlaylist(accessToken, userID);
-  } catch (error) {
-    return <>Error: Could not create new playlist</>;
-  }
-
-  try {
-    await populatePlaylist(accessToken, playlistID, tracks);
-  } catch (error) {
-    return <>Error: Could not populate playlist</>;
-  }
+  await populatePlaylist(accessToken, playlistID, tracks);
 
   const tracksJSX = tracks.map((track) => {
     return (

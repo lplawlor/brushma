@@ -2,15 +2,13 @@
 
 import { requestUserAuthorization } from "@/helpers/authorization";
 
-function Home() {
-  const scope = "playlist-modify-private user-library-read";
-
+function SignInWithSpotify() {
   return (
     <button
       onClick={() =>
         requestUserAuthorization(
           process.env.NEXT_PUBLIC_SPOTIFY_ID,
-          scope,
+          process.env.NEXT_PUBLIC_SCOPE,
           process.env.NEXT_PUBLIC_CANONICAL_URL + "spotify-redirect"
         )
       }
@@ -20,4 +18,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default SignInWithSpotify;

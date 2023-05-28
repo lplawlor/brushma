@@ -20,7 +20,7 @@ function Page({
     // If the following aren't present, this is not a valid redirect
     // from Spotify, or the user did not give authorization
     if (!searchParams.state || !searchParams.code) {
-      throw Error("Query parameters 'state' and/or 'code missing.")
+      throw Error("Query parameters 'state' and/or 'code' missing.")
     }
 
     if (searchParams.state != state) {
