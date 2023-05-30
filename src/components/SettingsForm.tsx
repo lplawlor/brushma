@@ -1,7 +1,7 @@
 "use client";
 
-import { redirect } from "next/navigation";
 import { useState } from "react";
+import PrimaryButton from "@/components/PrimaryButton";
 
 const RANGE_MIN = 0;
 const RANGE_MAX = 180000;
@@ -68,7 +68,7 @@ function SettingsForm() {
           />
         </label>
         <br />
-        <button type="submit">Generate</button>
+        <PrimaryButton type="submit">Generate Playlist</PrimaryButton>
       </form>
     </>
   );
