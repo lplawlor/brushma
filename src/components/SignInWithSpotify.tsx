@@ -5,7 +5,7 @@ import { requestUserAuthorization } from "@/helpers/authorization";
 function SignInWithSpotify() {
   return (
     <button
-      className="text-red-400 bg-white border-2 border-red-400 hover:text-white hover:bg-red-400 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-lg px-5 py-2.5 text-center mr-2 mb-2"
+      className="m-6 rounded-full border-2 border-red-400 bg-transparent px-5 py-2.5 text-center text-xl font-medium text-red-400 hover:bg-red-400 hover:text-white focus:outline-none focus:ring-4 focus:ring-red-300"
       onClick={() =>
         requestUserAuthorization(
           process.env.NEXT_PUBLIC_SPOTIFY_ID,
