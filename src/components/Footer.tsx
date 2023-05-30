@@ -5,18 +5,26 @@ function Footer() {
   return (
     <footer className="bottom-0 mx-6 mb-6">
       <hr className="mb-6 h-px border-0 bg-gray-200" />
-      <div className="flex flex-row text-base font-light items-start">
+      <div className="flex flex-row items-start text-base font-light">
         <p>
           Made by Liam Lawlor (
-          <a href="https://www.lplawlor.com/" className="text-red-400">
+          <a
+            href="https://www.lplawlor.com/"
+            target="_blank"
+            className="text-red-400"
+          >
             lplawlor.com
           </a>
           )
         </p>
 
-        <a className="items-center ml-auto flex flex-row justify-center" href="https://github.com/lplawlor/brushma">
+        <a
+          href="https://github.com/lplawlor/brushma"
+          target="_blank"
+          className="ml-auto flex flex-row items-center justify-center"
+        >
           <p>View on GitHub</p>
-          <Image src={github_icon} alt="GitHub Icon" className="h-7 w-7 ml-1" />
+          <Image src={github_icon} alt="GitHub Icon" className="ml-1 h-7 w-7" />
         </a>
       </div>
     </footer>
