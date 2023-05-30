@@ -35,7 +35,7 @@ function Page({
   }, [searchParams, state, codeVerifier]);
 
   if (complete) {
-    redirect("/");
+    redirect("/in");
   }
 }
 
