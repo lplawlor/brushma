@@ -33,41 +33,49 @@ function SettingsForm() {
     const total_seconds = Math.floor(miliseconds / 1000);
     const minutes = Math.floor(total_seconds / 60);
     const seconds = total_seconds % 60;
-    const padding0 = seconds < 10 ? "0" : "";
-    return minutes + ":" + padding0 + seconds;
+    const minutesWord = minutes == 1 ? " minute, " : " minutes, ";
+    const secondsWord = seconds == 1 ? " second" : " seconds";
+    return minutes + minutesWord + seconds + secondsWord;
   }
 
   return (
     <>
-      <form action="/generate">
-        <label>
-          Minimum Length: {milisecondstoMMSS(minMS)}
-          <br />
-          <input
-            type="range"
-            name="minLength"
-            min={RANGE_MIN}
-            max={RANGE_MAX}
-            step={RANGE_STEP}
-            value={minMS}
-            onChange={handleChangeMin}
-          />
+      <form
+        action="/generate"
+        className="flex w-auto flex-col items-center justify-center text-center text-xl"
+      >
+        <p>Using songs from your library between</p>
+
+        <label htmlFor="minLength" className="m-2">
+          {milisecondstoMMSS(minMS)}
         </label>
-        <br />
-        <label>
-          Maximum Length: {milisecondstoMMSS(maxMS)}
-          <br />
-          <input
-            type="range"
-            name="maxLength"
-            min={RANGE_MIN}
-            max={RANGE_MAX}
-            step={RANGE_STEP}
-            value={maxMS}
-            onChange={handleChangeMax}
-          />
+        <input
+          type="range"
+          name="minLength"
+          min={RANGE_MIN}
+          max={RANGE_MAX}
+          step={RANGE_STEP}
+          value={minMS}
+          onChange={handleChangeMin}
+          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-red-400"
+        />
+
+        <p className="mt-2">and</p>
+
+        <label htmlFor="maxLength" className="m-2">
+          {milisecondstoMMSS(maxMS)}
         </label>
-        <br />
+        <input
+          type="range"
+          name="maxLength"
+          min={RANGE_MIN}
+          max={RANGE_MAX}
+          step={RANGE_STEP}
+          value={maxMS}
+          onChange={handleChangeMax}
+          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-red-400"
+        />
+
         <PrimaryButton type="submit">Generate Playlist</PrimaryButton>
       </form>
     </>

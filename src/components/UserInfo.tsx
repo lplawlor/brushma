@@ -1,19 +1,23 @@
 import Image from "next/image";
 import { User } from "@/helpers/user";
-import DefaultProfilePic from "@/assets/profile_pic.png";
 
-async function UserInfo({user}: { user: User}) {
-  return (
-    <>
-      <p>Logged in as {user.display_name}</p>
+async function UserInfo({ user }: { user: User }) {
+  const imageElement =
+    user.image_url == null ? null : (
       <Image
-        src={user.image_url == null ? DefaultProfilePic : user.image_url}
+        src={user.image_url}
         alt="Profile picture"
         height={100}
         width={100}
+        className="mt-4 rounded-full"
       />
-      <p>ID: {user.id}</p>
-    </>
+    );
+
+  return (
+    <div className="m-4 flex flex-col items-center justify-center text-center text-3xl font-light">
+      <p>Signed in as {user.display_name}</p>
+      {imageElement}
+    </div>
   );
 }
 

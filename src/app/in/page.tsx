@@ -14,11 +14,11 @@ async function Page() {
   }
 
   return (
-    <>
+    <div className="flex flex-1 flex-col items-center justify-center font-light">
       {/*  @ts-expect-error Async Server Component */}
       <UserInfo user={JSON.parse(userCookie.value)} />
       <SettingsForm />
-    </>
+    </div>
   );
 }
 
