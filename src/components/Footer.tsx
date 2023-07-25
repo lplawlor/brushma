@@ -5,7 +5,7 @@ function Footer() {
   return (
     <footer className="bottom-0 mx-6 mb-6">
       <hr className="mb-6 h-px border-0 bg-gray-200" />
-      <div className="flex flex-row items-start text-base font-light">
+      <div className="flex flex-row items-start text-base">
         <p>
           Made by Liam Lawlor (
           <a
@@ -24,7 +24,7 @@ function Footer() {
           className="ml-auto flex flex-row items-center justify-center"
         >
           <p>View on GitHub</p>
-          <Image src={github_icon} alt="GitHub Icon" className="ml-1 h-7 w-7" />
+          <Image src={github_icon} alt="GitHub Icon" className="ml-2 h-7 w-7" />
         </a>
       </div>
     </footer>
