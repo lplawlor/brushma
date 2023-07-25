@@ -100,14 +100,18 @@ export async function getFilteredLibrary(
 ): Promise<SimplifiedTrack[]> {
   // This will be an array of SimplifiedTracks
   // It will store each track in the user's library which is within the time range given
-  let tracks = [];
+  let tracks : SimplifiedTrack[] = [];
+
+  // Often, requests to the Spotify /tracks endpoint will fail with error 500 (server error)
+  // We will wait for 3 such errors to occur on a given request before giving up and throwing an error
+  let failures = 0;
 
   // We will start at the first "page" of tracks, and continue until there are no pages left
   // Note that we're using the max value for 'limit' (50)
   let nextPage = "https://api.spotify.com/v1/me/tracks/?offset=0&limit=50";
   while (nextPage !== null) {
     // GET the next page of the user's library (liked tracks)
-    const spotifyResponse = await fetch(nextPage, {
+    const response = await fetch(nextPage, {
       method: "GET",
       cache: "no-store",
       headers: {
@@ -115,18 +119,34 @@ export async function getFilteredLibrary(
       },
     });
 
-    if (!spotifyResponse.ok) {
+    if (!response.ok) {
+      failures++;
+
+      // If less than three errors have occured, return to the start of the loop and try again
+      if (failures < 3) {
+        continue;
+      }
+
+      // If 3 errors occur on one request, give up
       throw Error(
-        "Spotify Error " + spotifyResponse.status + " on GET " + nextPage
+        "Spotify Error " +
+        response.status +
+        " on GET " +
+        nextPage +
+        ": " +
+        (await response.text())
       );
     }
 
-    const spotifyResponseBody =
-      (await spotifyResponse.json()) as TracksResponseBody;
+    // Reset the failure count for each new request
+    failures = 0;
 
-    nextPage = spotifyResponseBody.next;
+    const responseBody =
+      (await response.json()) as TracksResponseBody;
 
-    for (const { track } of spotifyResponseBody.items) {
+    nextPage = responseBody.next;
+
+    for (const { track } of responseBody.items) {
       // Do not include tracks which are local or outside of the time range given in the request
       if (
         track.is_local || //TODO: Consider if including local tracks will break the app
