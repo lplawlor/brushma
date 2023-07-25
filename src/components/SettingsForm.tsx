@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import PrimaryButton from "@/components/PrimaryButton";
 
 const RANGE_MIN = 0;
 const RANGE_MAX = 180000;
@@ -76,7 +75,12 @@ function SettingsForm() {
           className="h-2 w-full cursor-pointer appearance-none rounded-full bg-red-400"
         />
 
-        <PrimaryButton type="submit">Generate Playlist</PrimaryButton>
+        <button
+          className="m-6 rounded-full border-2 border-red-400 bg-transparent px-5 py-2.5 text-center text-xl font-medium text-red-400 hover:bg-red-400 hover:text-white focus:outline-none focus:ring-4 focus:ring-red-300"
+          type="submit"
+        >
+          Generate Playlist
+        </button>
       </form>
     </>
   );

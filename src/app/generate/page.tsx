@@ -20,14 +20,16 @@ async function Page({
   }
 
   if (!searchParams.minLength || !searchParams.maxLength) {
-    throw Error("Query parameters 'minLength' and/or 'maxLength' missing.")
+    throw Error("Query parameters 'minLength' and/or 'maxLength' missing.");
   }
 
   const minLength = parseInt(searchParams.minLength);
   const maxLength = parseInt(searchParams.maxLength);
 
   if (isNaN(minLength) || isNaN(maxLength)) {
-    throw Error("Could not parse query parameters 'minLength' and/or 'maxLength' as integers.");
+    throw Error(
+      "Could not parse query parameters 'minLength' and/or 'maxLength' as integers."
+    );
   }
 
   if (minLength > maxLength) {
@@ -40,7 +42,10 @@ async function Page({
 
   try {
     // Verify (decode) the accessToken using the secret key
-    accessToken = jwt.verify(accessTokenJWTCookie.value, process.env.JWT_SECRET) as string;
+    accessToken = jwt.verify(
+      accessTokenJWTCookie.value,
+      process.env.JWT_SECRET
+    ) as string;
   } catch (error) {
     return <>Error: Could not verfiy accessTokenJWT</>;
   }
@@ -58,15 +63,7 @@ async function Page({
   // FETCH STEP 3: Add the songs to the new playlist
   await populatePlaylist(accessToken, playlistID, tracks);
 
-  const tracksJSX = tracks.map((track) => {
-    return (
-      <p key={track.uri}>
-        {track.title} - {track.artist_names[0]} - {track.album_name} - {track.uri}
-      </p>
-    );
-  });
-
-  return <> {tracksJSX} </>;
+  redirect("/playlist/?id=" + playlistID);
 }
 
 export default Page;

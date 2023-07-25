@@ -4,13 +4,15 @@ import { User } from "@/helpers/user";
 async function UserInfo({ user }: { user: User }) {
   const imageElement =
     user.image_url == null ? null : (
-      <Image
-        src={user.image_url}
-        alt="Profile picture"
-        height={100}
-        width={100}
-        className="mt-4 rounded-full"
-      />
+      <div className="mt-4 flex h-32 w-32 overflow-hidden rounded-full">
+        <Image
+          src={user.image_url}
+          alt="Profile picture"
+          height={128} // h-32 and w-32 correspond to 128px
+          width={128}
+          className="object-cover"
+        />
+      </div>
     );
 
   return (
