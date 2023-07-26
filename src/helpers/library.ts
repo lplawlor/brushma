@@ -3,6 +3,8 @@
  * fetching and filtering the user's library via the Spotify API.
  */
 
+import { retry } from "async";
+
 /**
  * The following two interfaces are incomplete respresentations Response as described here:
  * https://developer.spotify.com/documentation/web-api/reference/get-users-saved-tracks
@@ -38,6 +40,8 @@ interface SpotifyTrack {
 interface TracksResponseBody {
   // ...
   next: string;
+  // ...
+  total: number;
   // ...
   items: [
     {
@@ -86,6 +90,7 @@ function simplifyTrack(track: SpotifyTrack): SimplifiedTrack {
 /**
  * Fetch and filter the user's library of saved tracks, and return it as a simplified array.
  * This method can invoke many GET requests to the Spotify API, each capped at 50 tracks.
+ * The requests are made asynchronously, which reduces the runtime of this function considerably.
  *
  * @param accessToken access_token string granted by Spotify
  *                    must have user-library-read scope
@@ -98,20 +103,20 @@ export async function getFilteredLibrary(
   minLength: number,
   maxLength: number
 ): Promise<SimplifiedTrack[]> {
-  // This will be an array of SimplifiedTracks
-  // It will store each track in the user's library which is within the time range given
-  let tracks : SimplifiedTrack[] = [];
+  // This will store all tracks in the user's library which are within the time range given
+  // It will be returned in the end
+  let tracks: SimplifiedTrack[] = [];
 
-  // Often, requests to the Spotify /tracks endpoint will fail with error 500 (server error)
-  // We will wait for 3 such errors to occur on a given request before giving up and throwing an error
-  let failures = 0;
-
-  // We will start at the first "page" of tracks, and continue until there are no pages left
-  // Note that we're using the max value for 'limit' (50)
-  let nextPage = "https://api.spotify.com/v1/me/tracks/?offset=0&limit=50";
-  while (nextPage !== null) {
-    // GET the next page of the user's library (liked tracks)
-    const response = await fetch(nextPage, {
+  /**
+   * Fetch 50 tracks at the given offset using a GET request and return the body as JSON.
+   * An error is thrown for a HTTP 500 response status.
+   * This nested function was created as it is needed multiple times later in this function. 
+   * 
+   * @param offset number of tracks to skip ahead in the user's library
+   * @returns a Promise which should resolve to a TracksResponseBody object
+   */
+  async function fetchJSON(offset: number): Promise<TracksResponseBody> {
+    const response = await fetch("https://api.spotify.com/v1/me/tracks/?offset=" + offset + "&limit=50", {
       method: "GET",
       cache: "no-store",
       headers: {
@@ -119,33 +124,20 @@ export async function getFilteredLibrary(
       },
     });
 
-    if (!response.ok) {
-      failures++;
-
-      // If less than three errors have occured, return to the start of the loop and try again
-      if (failures < 3) {
-        continue;
-      }
-
-      // If 3 errors occur on one request, give up
-      throw Error(
-        "Spotify Error " +
-        response.status +
-        " on GET " +
-        nextPage +
-        ": " +
-        (await response.text())
-      );
+    if (response.status == 500) {
+      throw new Error("Spotify Error 500 on GET " + offset + ": " + response.statusText)
     }
 
-    // Reset the failure count for each new request
-    failures = 0;
+    return (await response.json()) as TracksResponseBody;
+  }
 
-    const responseBody =
-      (await response.json()) as TracksResponseBody;
-
-    nextPage = responseBody.next;
-
+  /**
+   * Loop through the tracks on a "page" and add the matching ones to the tracks list.
+   * This nested function is defined to be used as a callback later.
+   * 
+   * @param responseBody body of the response object returned from Spotify's /me/tracks endpoint
+   */
+  async function filterAndAddTracks(responseBody: TracksResponseBody): Promise<void> {
     for (const { track } of responseBody.items) {
       // Do not include tracks which are local or outside of the time range given in the request
       if (
@@ -160,5 +152,40 @@ export async function getFilteredLibrary(
     }
   }
 
+  // The first request must be made outside the loop, to get the total number of pages
+  // Occasionally, a HTTP 500 (server) status will be returned despite the request being okay
+  // Therefore, the retry() method is used to try 3 times before giving up
+  const responseBody = (await retry(3, async () => {
+    // Get the first 50 tracks (offset 0)
+    return await fetchJSON(0);
+  }));
+
+  // This is the total number of requests which must be made (the first is already done)
+  const totalPages = Math.ceil(responseBody.total / 50);
+
+  // This list will store the Promises created by running filterAndAddTracks on the response body of each request
+  let promises = [filterAndAddTracks(responseBody)];
+
+  // The rest of the requests can be made in a loop, incrementing the offset each time
+  for (let page = 1; page < totalPages; page++) {
+    // Push each promise from filterAndAddTracks to the list
+    // Note that we do not await the resolution of filterAndAddTracks, so the requests can be made asynchronously
+    promises.push(
+      // Once again, retry is used to send each request 3 times before giving up
+      retry(3, async () => {
+        // The offset is the page number multiplied by the page size (50)
+        return await fetchJSON(50 * page);
+      })
+        .then(async (responseBody) => {
+          // Once the response body is ready, filter the list of tracks and add them
+          return filterAndAddTracks(responseBody);
+        })
+    );
+  }
+
+  // Await for all pages to be processed
+  await Promise.all(promises);
+
+  // Return the list of SimplifiedTrack objects which match the given criteria
   return tracks;
 }
