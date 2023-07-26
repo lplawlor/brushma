@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Cookies from "universal-cookie";
 import { fetchAccessTokenJWT } from "@/helpers/authorization";
 import { fetchUser } from "@/helpers/user";
+import LoadingPage from "@/components/LoadingPage";
 
 function Page({
   searchParams,
@@ -37,6 +38,8 @@ function Page({
   if (complete) {
     redirect("/in");
   }
+  
+  return <LoadingPage lines={["Signing in..."]}/>;
 }
 
 export default Page;

@@ -56,7 +56,7 @@ function SettingsForm() {
           step={RANGE_STEP}
           value={minMS}
           onChange={handleChangeMin}
-          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-red-400"
+          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-300"
         />
 
         <p className="mt-2">and</p>
@@ -72,7 +72,7 @@ function SettingsForm() {
           step={RANGE_STEP}
           value={maxMS}
           onChange={handleChangeMax}
-          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-red-400"
+          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-red-400 focus:outline-none focus:ring-4 focus:ring-red-300"
         />
 
         <button

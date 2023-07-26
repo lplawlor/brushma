@@ -17,7 +17,7 @@ async function Page() {
   return (
     <div className="flex flex-1 flex-col items-center justify-center">
       <Image src={logo} alt="Brushma Logo" className="m-6" />
-      <p className="text-xl">[Description]</p>
+      <p className="text-xl">Create a tooth-brushing playlist from your favorite songs!</p>
       <SignInWithSpotify />
     </div>
   );
