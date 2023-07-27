@@ -9,6 +9,7 @@ import LoadingPage from "@/components/LoadingPage";
 
 function Page() {
   const searchParams = useSearchParams();
+  const [error, setError] = useState("");
   const [complete, setComplete] = useState(false);
   const universalCookies = new Cookies();
   const codeVerifier = universalCookies.get("codeVerifier");
@@ -30,7 +31,14 @@ function Page() {
       .then(() => {
         setComplete(true);
       })
-  }, [searchParams, state, codeVerifier]);
+      .catch((error) => {
+        setError(error);
+      })
+  }, [searchParams, state, codeVerifier, setComplete, setError]);
+
+  if (error) {
+    throw new Error(error);
+  }
 
   if (complete) {
     redirect("/in");
