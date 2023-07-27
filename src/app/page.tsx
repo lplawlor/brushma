@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 import SignInWithSpotify from "@/components/SignInWithSpotify";
 import logo from "@/assets/logo.svg";
+import Footer from "@/components/Footer";
 
 async function Page() {
   const cookieStore = cookies();
@@ -19,6 +20,7 @@ async function Page() {
       <Image src={logo} alt="Brushma Logo" className="m-6" />
       <p className="text-xl">Create a tooth-brushing playlist from your favorite songs!</p>
       <SignInWithSpotify />
+      <Footer />
     </div>
   );
 }

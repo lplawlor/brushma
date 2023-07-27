@@ -2,7 +2,7 @@ import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import Favicon from "@/components/Favicon";
 import Background from "@/components/Background";
-import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,8 +25,8 @@ export default async function RootLayout({
         className={inter.className + " flex min-h-screen flex-col antialiased"}
       >
         <Background />
+        <Header />
         <div className="flex flex-1 flex-col">{children}</div>
-        <Footer />
       </body>
     </html>
   );
