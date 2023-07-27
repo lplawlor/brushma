@@ -22,7 +22,10 @@ export default async function RootLayout({
         <Favicon />
       </head>
       <body
-        className={inter.className + " flex min-h-screen flex-col antialiased"}
+        className={
+          inter.className +
+          " flex min-h-screen flex-col antialiased drop-shadow-md"
+        }
       >
         <Background />
         <Header />

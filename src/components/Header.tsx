@@ -3,7 +3,7 @@ import github_icon from "@/assets/github_icon.svg";
 
 function Header() {
   return (
-    <header className="fixed w-screen top-0 p-6 flex flex-row items-start text-base">
+    <header className="fixed w-screen top-0 p-6 flex flex-row items-start text-lg">
       <p>
         Made by Liam Lawlor (
         <a
