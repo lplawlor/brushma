@@ -149,7 +149,7 @@ export async function fetchAccessTokenJWT(
   });
 
   if (!response.ok) {
-    throw Error("Error " + response.status + " on GET " + "");
+    throw Error("Error " + response.status + " on GET " + endpoint);
   }
 
   const accessTokenJWT = await response.text();
