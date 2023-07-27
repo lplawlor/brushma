@@ -1,17 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
+import { redirect, useSearchParams } from "next/navigation";
 import Cookies from "universal-cookie";
 import { fetchAccessTokenJWT } from "@/helpers/authorization";
 import { fetchUser } from "@/helpers/user";
 import LoadingPage from "@/components/LoadingPage";
 
-function Page({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | undefined };
-}) {
+function Page() {
+  const searchParams = useSearchParams();
   const [complete, setComplete] = useState(false);
   const universalCookies = new Cookies();
   const codeVerifier = universalCookies.get("codeVerifier");
@@ -20,15 +17,15 @@ function Page({
   useEffect(() => {
     // If the following aren't present, this is not a valid redirect
     // from Spotify, or the user did not give authorization
-    if (!searchParams.state || !searchParams.code) {
+    if (!searchParams.get("state") || !searchParams.get("code")) {
       throw Error("Query parameters 'state' and/or 'code' missing.")
     }
 
-    if (searchParams.state != state) {
+    if (searchParams.get("state") != state) {
       throw Error("States do not match.")
     }
 
-    fetchAccessTokenJWT(searchParams.code, codeVerifier)
+    fetchAccessTokenJWT(searchParams.get("code") as string, codeVerifier)
       .then(fetchUser)
       .then(() => {
         setComplete(true);

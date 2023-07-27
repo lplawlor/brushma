@@ -88,6 +88,16 @@ function simplifyTrack(track: SpotifyTrack): SimplifiedTrack {
 }
 
 /**
+ * Return a promise which will resolve in the given number of miliseconds.
+ * 
+ * @param ms number of miliseconds to sleep for
+ * @returns Promise resolving in ms miliseconds
+ */
+async function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
  * Fetch and filter the user's library of saved tracks, and return it as a simplified array.
  * This method can invoke many GET requests to the Spotify API, each capped at 50 tracks.
  * The requests are made asynchronously, which reduces the runtime of this function considerably.
@@ -152,13 +162,18 @@ export async function getFilteredLibrary(
     }
   }
 
+  const retryOpts = {
+    times: 5,
+    interval: 10,
+  }
+
   // The first request must be made outside the loop, to get the total number of pages
   // Occasionally, a HTTP 500 (server) status will be returned despite the request being okay
   // Therefore, the retry() method is used to try 3 times before giving up
-  const responseBody = (await retry(3, async () => {
+  const responseBody = await retry(retryOpts, async () => {
     // Get the first 50 tracks (offset 0)
     return await fetchJSON(0);
-  }));
+  });
 
   // This is the total number of requests which must be made (the first is already done)
   const totalPages = Math.ceil(responseBody.total / 50);
@@ -172,7 +187,7 @@ export async function getFilteredLibrary(
     // Note that we do not await the resolution of filterAndAddTracks, so the requests can be made asynchronously
     promises.push(
       // Once again, retry is used to send each request 3 times before giving up
-      retry(3, async () => {
+      retry(retryOpts, async () => {
         // The offset is the page number multiplied by the page size (50)
         return await fetchJSON(50 * page);
       })
@@ -181,6 +196,9 @@ export async function getFilteredLibrary(
           return filterAndAddTracks(responseBody);
         })
     );
+
+    // Sleep for 20 ms between creating promises to avoid exceeding rate limit
+    await sleep(20);
   }
 
   // Await for all pages to be processed

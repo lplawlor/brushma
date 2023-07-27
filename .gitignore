@@ -4,5 +4,5 @@
 # Next.js
 /.next/
 
-# Local enviropnments
+# Local environments
 .env*.local
