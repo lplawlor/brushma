@@ -3,8 +3,8 @@ import github_icon from "@/assets/github_icon.svg";
 
 function Header() {
   return (
-    <header className="fixed w-screen top-0 p-6 flex flex-row items-start text-lg">
-      <p>
+    <header className="fixed w-screen top-0 p-6 flex flex-row items-center text-md md:text-lg">
+      <p className="mr-3">
         Made by Liam Lawlor (
         <a
           href="https://www.lplawlor.com/"
@@ -21,7 +21,7 @@ function Header() {
         target="_blank"
         className="ml-auto flex flex-row items-center justify-center focus:outline-none focus:ring-2 focus:ring-red-300"
       >
-        <p>View on GitHub</p>
+        <p className="text-right">View on GitHub</p>
         <Image src={github_icon} alt="GitHub Icon" className="ml-2 h-7 w-7" />
       </a>
     </header>
