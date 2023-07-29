@@ -141,7 +141,7 @@ export async function getFilteredLibrary(
       throw new Error(
         "Spotify Error " +
           response.status +
-          " on GET " +
+          " on GET /me/tracks at offset " +
           offset +
           ": " +
           response.statusText
