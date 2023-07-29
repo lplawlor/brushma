@@ -16,8 +16,8 @@ async function Page({
   return (
     <>
       <div className="flex flex-1 flex-col items-center justify-center">
-        <Image src={icon} alt="Brushma Icon" className="m-6" />
-        <p className="text-2xl">Your Brushma playlist is ready!</p>
+        <Image src={icon} alt="Brushma Icon" className="m-6 w-28 md:w-36" />
+        <p className="text-xl md:text-2xl">Your Brushma playlist is ready!</p>
         <a
           className="btn-primary"
           href={playlistLink}

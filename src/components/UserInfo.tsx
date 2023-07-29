@@ -4,7 +4,7 @@ import { User } from "@/helpers/user";
 async function UserInfo({ user }: { user: User }) {
   const imageElement =
     user.image_url == null ? null : (
-      <div className="mt-4 flex h-32 w-32 overflow-hidden rounded-full">
+      <div className="mt-4 flex h-24 w-24 md:h-32 md:w-32 overflow-hidden rounded-full">
         <Image
           src={user.image_url}
           alt="Profile picture"
@@ -16,7 +16,7 @@ async function UserInfo({ user }: { user: User }) {
     );
 
   return (
-    <div className="m-4 flex flex-col items-center justify-center text-center text-3xl font-light">
+    <div className="m-4 flex flex-col items-center justify-center text-center text-2xl md:text-3xl font-light">
       <p>Signed in as {user.display_name}</p>
       {imageElement}
     </div>
