@@ -208,8 +208,8 @@ export async function getFilteredLibrary(
       })
     );
 
-    // Sleep for 20 ms between creating promises to avoid exceeding rate limit
-    await sleep(20);
+    // Sleep for 100 ms between creating promises to avoid exceeding rate limit
+    await sleep(100);
   }
 
   // Await for all pages to be processed
