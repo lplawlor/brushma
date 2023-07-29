@@ -47,7 +47,7 @@ async function Page({
       process.env.JWT_SECRET
     ) as string;
   } catch (error) {
-    return <>Error: Could not verfiy accessTokenJWT</>;
+    throw new Error("Could not verfiy accessTokenJWT");
   }
 
   // FETCH STEP 1: Get all the user's song in the given time range

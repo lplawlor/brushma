@@ -25,11 +25,24 @@ export async function GET(request: NextRequest): Promise<Response> {
     });
   }
 
-  return await fetch("https://api.spotify.com/v1/me", {
+  const spotifyResponse = await fetch("https://api.spotify.com/v1/me", {
     method: "GET",
     cache: "no-store",
     headers: {
       Authorization: "Bearer " + accessToken,
     },
+  });
+
+  if(spotifyResponse.ok) {
+    const spotifyResponseBody = await spotifyResponse.json();
+
+    return new NextResponse(JSON.stringify(spotifyResponseBody), {
+      status: 200,
+    });
+  }
+
+  return new NextResponse("GET request to Spotify /me endpoint failed.", {
+    status: spotifyResponse.status,
+    statusText: spotifyResponse.statusText,
   });
 }

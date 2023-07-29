@@ -89,12 +89,12 @@ function simplifyTrack(track: SpotifyTrack): SimplifiedTrack {
 
 /**
  * Return a promise which will resolve in the given number of miliseconds.
- * 
+ *
  * @param ms number of miliseconds to sleep for
  * @returns Promise resolving in ms miliseconds
  */
 async function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
@@ -120,22 +120,27 @@ export async function getFilteredLibrary(
   /**
    * Fetch 50 tracks at the given offset using a GET request and return the body as JSON.
    * An error is thrown for a HTTP 500 response status.
-   * This nested function was created as it is needed multiple times later in this function. 
-   * 
+   * This nested function was created as it is needed multiple times later in this function.
+   *
    * @param offset number of tracks to skip ahead in the user's library
    * @returns a Promise which should resolve to a TracksResponseBody object
    */
   async function fetchJSON(offset: number): Promise<TracksResponseBody> {
-    const response = await fetch("https://api.spotify.com/v1/me/tracks/?offset=" + offset + "&limit=50", {
-      method: "GET",
-      cache: "no-store",
-      headers: {
-        Authorization: "Bearer " + accessToken,
-      },
-    });
+    const response = await fetch(
+      "https://api.spotify.com/v1/me/tracks/?offset=" + offset + "&limit=50",
+      {
+        method: "GET",
+        cache: "no-store",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      }
+    );
 
     if (response.status == 500) {
-      throw new Error("Spotify Error 500 on GET " + offset + ": " + response.statusText)
+      throw new Error(
+        "Spotify Error 500 on GET " + offset + ": " + response.statusText
+      );
     }
 
     return (await response.json()) as TracksResponseBody;
@@ -144,10 +149,12 @@ export async function getFilteredLibrary(
   /**
    * Loop through the tracks on a "page" and add the matching ones to the tracks list.
    * This nested function is defined to be used as a callback later.
-   * 
+   *
    * @param responseBody body of the response object returned from Spotify's /me/tracks endpoint
    */
-  async function filterAndAddTracks(responseBody: TracksResponseBody): Promise<void> {
+  async function filterAndAddTracks(
+    responseBody: TracksResponseBody
+  ): Promise<void> {
     for (const { track } of responseBody.items) {
       // Do not include tracks which are local or outside of the time range given in the request
       if (
@@ -165,7 +172,7 @@ export async function getFilteredLibrary(
   const retryOpts = {
     times: 5,
     interval: 10,
-  }
+  };
 
   // The first request must be made outside the loop, to get the total number of pages
   // Occasionally, a HTTP 500 (server) status will be returned despite the request being okay
@@ -179,7 +186,7 @@ export async function getFilteredLibrary(
   const totalPages = Math.ceil(responseBody.total / 50);
 
   // This list will store the Promises created by running filterAndAddTracks on the response body of each request
-  let promises = [filterAndAddTracks(responseBody)];
+  let promises: Promise<void>[] = [filterAndAddTracks(responseBody)];
 
   // The rest of the requests can be made in a loop, incrementing the offset each time
   for (let page = 1; page < totalPages; page++) {
@@ -190,11 +197,10 @@ export async function getFilteredLibrary(
       retry(retryOpts, async () => {
         // The offset is the page number multiplied by the page size (50)
         return await fetchJSON(50 * page);
+      }).then(async (responseBody) => {
+        // Once the response body is ready, filter the list of tracks and add them
+        return await filterAndAddTracks(responseBody);
       })
-        .then(async (responseBody) => {
-          // Once the response body is ready, filter the list of tracks and add them
-          return filterAndAddTracks(responseBody);
-        })
     );
 
     // Sleep for 20 ms between creating promises to avoid exceeding rate limit
