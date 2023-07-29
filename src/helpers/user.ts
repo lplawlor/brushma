@@ -47,22 +47,18 @@ export async function fetchUser(accessTokenJWT: string): Promise<User> {
     responseBody.images.length > 0 ? responseBody.images[0].url : null;
 
   const thisUser = {
-      display_name: responseBody.display_name,
-      id: responseBody.id,
-      image_url: profilePic,
-    };
+    display_name: responseBody.display_name,
+    id: responseBody.id,
+    image_url: profilePic,
+  };
 
   // Extract and return just the necessary info from the response
   const universalCookies = new Cookies();
-  universalCookies.set(
-    "user",
-    thisUser,
-    {
-      path: "/",
-      maxAge: 3540,
-      sameSite: "lax",
-    }
-  );
+  universalCookies.set("user", thisUser, {
+    path: "/",
+    maxAge: 3540,
+    sameSite: "lax",
+  });
 
   return thisUser;
 }

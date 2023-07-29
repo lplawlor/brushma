@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pretty": "prettier 'src/**/*.{js,ts,mjs,cjs,json}' --write"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.2",
