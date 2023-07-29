@@ -39,10 +39,7 @@ export async function POST(request: NextRequest) {
 
   // Extract the access token from the response body and sign it as a JWT using a secret key
   const accessToken = (await spotifyResponse.json()).access_token;
-  const accessTokenJWT = jwt.sign(
-    accessToken,
-    process.env.JWT_SECRET
-  );
+  const accessTokenJWT = jwt.sign(accessToken, process.env.JWT_SECRET);
 
   // Repackage the JWT as a successful response (HTTP status 200)
   return new NextResponse(accessTokenJWT, {

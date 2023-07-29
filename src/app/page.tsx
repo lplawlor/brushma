@@ -17,9 +17,9 @@ async function Page() {
 
   return (
     <>
-      <div className="flex flex-1 flex-col items-center justify-center">
-        <Image src={logo} alt="Brushma Logo" className="m-6" />
-        <p className="text-2xl">
+      <div className="flex flex-1 flex-col items-center justify-center text-center">
+        <Image src={logo} alt="Brushma Logo" className="m-6 w-3/4 md:w-[40rem] lg:w-[50rem]" />
+        <p className="mx-10 text-lg md:text-xl lg:text-2xl">
           Create a tooth-brushing playlist from your favorite songs!
         </p>
         <SignInWithSpotify />

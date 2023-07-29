@@ -33,7 +33,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     },
   });
 
-  if(!spotifyResponse.ok) {
+  if (!spotifyResponse.ok) {
     return new NextResponse("GET request to Spotify /me endpoint failed.", {
       status: spotifyResponse.status,
       statusText: spotifyResponse.statusText,

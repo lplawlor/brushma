@@ -38,51 +38,49 @@ function SettingsForm() {
   }
 
   return (
-    <>
-      <form
-        action="/generate"
-        className="flex w-auto flex-col items-center justify-center text-center text-xl"
+    <form
+      action="/generate"
+      className="mx-6 flex w-auto flex-col items-center justify-center text-center text-lg md:text-xl"
+    >
+      <p>Using songs from your library between</p>
+
+      <label htmlFor="minLength" className="m-2">
+        {milisecondstoMMSS(minMS)}
+      </label>
+      <input
+        type="range"
+        name="minLength"
+        min={RANGE_MIN}
+        max={RANGE_MAX}
+        step={RANGE_STEP}
+        value={minMS}
+        onChange={handleChangeMin}
+        className="h-2 w-full cursor-pointer appearance-none rounded-full bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-300"
+      />
+
+      <p className="mt-2">and</p>
+
+      <label htmlFor="maxLength" className="m-2">
+        {milisecondstoMMSS(maxMS)}
+      </label>
+      <input
+        type="range"
+        name="maxLength"
+        min={RANGE_MIN}
+        max={RANGE_MAX}
+        step={RANGE_STEP}
+        value={maxMS}
+        onChange={handleChangeMax}
+        className="h-2 w-full cursor-pointer appearance-none rounded-full bg-red-400 focus:outline-none focus:ring-4 focus:ring-red-300"
+      />
+
+      <button
+        className="btn-primary"
+        type="submit"
       >
-        <p>Using songs from your library between</p>
-
-        <label htmlFor="minLength" className="m-2">
-          {milisecondstoMMSS(minMS)}
-        </label>
-        <input
-          type="range"
-          name="minLength"
-          min={RANGE_MIN}
-          max={RANGE_MAX}
-          step={RANGE_STEP}
-          value={minMS}
-          onChange={handleChangeMin}
-          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-red-400 focus:outline-none focus:ring-2 focus:ring-red-300"
-        />
-
-        <p className="mt-2">and</p>
-
-        <label htmlFor="maxLength" className="m-2">
-          {milisecondstoMMSS(maxMS)}
-        </label>
-        <input
-          type="range"
-          name="maxLength"
-          min={RANGE_MIN}
-          max={RANGE_MAX}
-          step={RANGE_STEP}
-          value={maxMS}
-          onChange={handleChangeMax}
-          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-red-400 focus:outline-none focus:ring-4 focus:ring-red-300"
-        />
-
-        <button
-          className="m-6 rounded-full border-2 border-red-400 bg-transparent px-5 py-2.5 text-center text-xl font-medium text-red-400 hover:bg-red-400 hover:text-white focus:outline-none focus:ring-4 focus:ring-red-300"
-          type="submit"
-        >
-          Generate Playlist
-        </button>
-      </form>
-    </>
+        Generate Playlist
+      </button>
+    </form>
   );
 }
 
