@@ -137,9 +137,14 @@ export async function getFilteredLibrary(
       }
     );
 
-    if (response.status == 500) {
+    if (!response.ok) {
       throw new Error(
-        "Spotify Error 500 on GET " + offset + ": " + response.statusText
+        "Spotify Error " +
+          response.status +
+          " on GET " +
+          offset +
+          ": " +
+          response.statusText
       );
     }
 
