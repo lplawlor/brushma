@@ -175,7 +175,7 @@ export async function getFilteredLibrary(
   }
 
   const retryOpts = {
-    times: 5,
+    times: 10,
     interval: 10,
   };
 
@@ -213,7 +213,9 @@ export async function getFilteredLibrary(
   }
 
   // Await for all pages to be processed
-  await Promise.all(promises);
+  await Promise.all(promises).catch((error) => {
+    throw new Error(error);
+  });
 
   // Return the list of SimplifiedTrack objects which match the given criteria
   return tracks;
