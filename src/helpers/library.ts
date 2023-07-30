@@ -3,7 +3,7 @@
  * fetching and filtering the user's library via the Spotify API.
  */
 
-import { retry } from "async";
+import retry from "async-retry";
 
 /**
  * The following two interfaces are incomplete respresentations Response as described here:
@@ -119,36 +119,66 @@ export async function getFilteredLibrary(
 
   /**
    * Fetch 50 tracks at the given offset using a GET request and return the body as JSON.
-   * An error is thrown for a HTTP 500 response status.
+   * The async-retry package is used to retry these requests several times.
    * This nested function was created as it is needed multiple times later in this function.
    *
    * @param offset number of tracks to skip ahead in the user's library
    * @returns a Promise which should resolve to a TracksResponseBody object
    */
   async function fetchJSON(offset: number): Promise<TracksResponseBody> {
-    const response = await fetch(
-      "https://api.spotify.com/v1/me/tracks/?offset=" + offset + "&limit=50",
+    // Debug version of the fetch() function which always rejects
+    // function bad_fetch(): Promise<Response> {
+    //   return new Promise((resolve, reject) => {
+    //     return reject("Rejecting from bad_fetch");
+    //   });
+    // }
+    return await retry(
+      async (bail) => {
+        // const response = await bad_fetch();
+        const response = await fetch(
+          "https://api.spotify.com/v1/me/tracks/?offset=" +
+            offset +
+            "&limit=50",
+          {
+            method: "GET",
+            cache: "no-store",
+            headers: {
+              Authorization: "Bearer " + accessToken,
+            },
+          }
+        );
+
+        // Bail (do not retry) if the following status codes are encountered
+        if (
+          response.status == 401 || // Bad or expired token
+          response.status == 403 || // Bad OAuth Request
+          response.status == 429 // The app has exceeded its rate limits
+        ) {
+          bail(new Error(response.statusText));
+        }
+
+        // If some other non-ok status code is encountered, throw an error, which will trigger a retry
+        // This often occurs with HTTP status 500 (Internal Server Error)
+        if (!response.ok) {
+          throw new Error(
+            "Spotify Error " +
+              response.status +
+              " on GET /me/tracks at offset " +
+              offset +
+              ": " +
+              response.statusText
+          );
+        }
+
+        // If the response is OK, extract the response JSON
+        return (await response.json()) as TracksResponseBody;
+      },
       {
-        method: "GET",
-        cache: "no-store",
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
+        retries: 10,
+        minTimeout: 100,
+        maxTimeout: 5000,
       }
     );
-
-    if (!response.ok) {
-      throw new Error(
-        "Spotify Error " +
-          response.status +
-          " on GET /me/tracks at offset " +
-          offset +
-          ": " +
-          response.statusText
-      );
-    }
-
-    return (await response.json()) as TracksResponseBody;
   }
 
   /**
@@ -174,17 +204,11 @@ export async function getFilteredLibrary(
     }
   }
 
-  const retryOpts = {
-    times: 10,
-    interval: 10,
-  };
-
   // The first request must be made outside the loop, to get the total number of pages
   // Occasionally, a HTTP 500 (server) status will be returned despite the request being okay
   // Therefore, the retry() method is used to try 3 times before giving up
-  const responseBody = await retry(retryOpts, async () => {
-    // Get the first 50 tracks (offset 0)
-    return await fetchJSON(0);
+  const responseBody = await fetchJSON(0).catch((error) => {
+    throw error;
   });
 
   // This is the total number of requests which must be made (the first is already done)
@@ -199,23 +223,22 @@ export async function getFilteredLibrary(
     // Note that we do not await the resolution of filterAndAddTracks, so the requests can be made asynchronously
     promises.push(
       // Once again, retry is used to send each request 3 times before giving up
-      retry(retryOpts, async () => {
-        // The offset is the page number multiplied by the page size (50)
-        return await fetchJSON(50 * page);
-      }).then(async (responseBody) => {
-        // Once the response body is ready, filter the list of tracks and add them
-        return await filterAndAddTracks(responseBody);
-      })
+      fetchJSON(50 * page)
+        .then(async (responseBody) => {
+          // Once the response body is ready, filter the list of tracks and add them
+          await filterAndAddTracks(responseBody);
+        })
+        .catch((error) => {
+          throw error;
+        })
     );
 
-    // Sleep for 100 ms between creating promises to avoid exceeding rate limit
-    await sleep(100);
+    // Sleep for 20 ms between creating promises to avoid making requests too close together
+    await sleep(20);
   }
 
   // Await for all pages to be processed
-  await Promise.all(promises).catch((error) => {
-    throw new Error(error);
-  });
+  await Promise.all(promises);
 
   // Return the list of SimplifiedTrack objects which match the given criteria
   return tracks;

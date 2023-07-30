@@ -50,17 +50,17 @@ async function Page({
     throw new Error("Could not verfiy accessTokenJWT");
   }
 
-  // FETCH STEP 1: Get all the user's song in the given time range
+  // GENERATE STEP 1: Get all the user's song in the given time range
   const tracks = await getFilteredLibrary(accessToken, minLength, maxLength);
 
   if (tracks.length == 0) {
     throw Error("No tracks in given range found.");
   }
 
-  // FETCH STEP 2: Create a new empty playlist
+  // GENERATE STEP 2: Create a new empty playlist
   const playlistID = await createPlaylist(accessToken, userID);
 
-  // FETCH STEP 3: Add the songs to the new playlist
+  // GENERATE STEP 3: Add the songs to the new playlist
   await populatePlaylist(accessToken, playlistID, tracks);
 
   redirect("/playlist/?id=" + playlistID);
