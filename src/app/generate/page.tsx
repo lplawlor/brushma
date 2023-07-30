@@ -54,7 +54,7 @@ async function Page({
   const tracks = await getFilteredLibrary(accessToken, minLength, maxLength);
 
   if (tracks.length == 0) {
-    throw Error("No tracks in given range found.");
+    redirect("/no-songs");
   }
 
   // GENERATE STEP 2: Create a new empty playlist
