@@ -2,7 +2,11 @@
   <img src="src/assets/pill_logo.svg" alt="Brushma"/>
 </p>
 
-> __A Next.js web app for creating a tooth-brushing playlist using the Spotify API.__
+<p align="center">
+  <b>
+    A Next.js web app for creating a tooth-brushing playlist using the Spotify API.
+  </b>
+</p>
 
 ## What's Brushma?
 
