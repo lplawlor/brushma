@@ -1,7 +1,10 @@
+/**
+ * Utility functions used to create and fill playlists via the Spotify API.
+ */
 import { SimplifiedTrack } from "./library";
 
 /**
- * Creates a new private playlist named 'Brushma' in the current user's library.
+ * Creates a new private playlist named "Brushma" in the current user's library.
  *
  * @param accessToken access token with playlist-modify-private scope for the current user
  * @param userID Spotify ID of the current user
@@ -35,11 +38,11 @@ export async function createPlaylist(
   if (!response.ok) {
     throw Error(
       "Spotify Error " +
-        response.status +
-        " on POST " +
-        endpoint +
-        ": " +
-        (await response.text())
+      response.status +
+      " on POST " +
+      endpoint +
+      ": " +
+      (await response.text())
     );
   }
 
@@ -82,11 +85,11 @@ export async function populatePlaylist(
     if (!response.ok) {
       throw Error(
         "Spotify Error " +
-          response.status +
-          " on POST " +
-          endpoint +
-          ": " +
-          (await response.text())
+        response.status +
+        " on POST " +
+        endpoint +
+        ": " +
+        (await response.text())
       );
     }
   }

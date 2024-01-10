@@ -2,7 +2,6 @@
  * A set of type interfaces and functions for automatically
  * fetching and filtering the user's library via the Spotify API.
  */
-
 import retry from "async-retry";
 
 /**
@@ -137,8 +136,8 @@ export async function getFilteredLibrary(
         // const response = await bad_fetch();
         const response = await fetch(
           "https://api.spotify.com/v1/me/tracks/?offset=" +
-            offset +
-            "&limit=50",
+          offset +
+          "&limit=50",
           {
             method: "GET",
             cache: "no-store",
@@ -162,11 +161,11 @@ export async function getFilteredLibrary(
         if (!response.ok) {
           throw new Error(
             "Spotify Error " +
-              response.status +
-              " on GET /me/tracks at offset " +
-              offset +
-              ": " +
-              response.statusText
+            response.status +
+            " on GET /me/tracks at offset " +
+            offset +
+            ": " +
+            response.statusText
           );
         }
 

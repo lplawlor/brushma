@@ -1,17 +1,19 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+/**
+ * Homepage containing the logo, tagline and a link to sign in with Spotify.
+ */
 import Image from "next/image";
-import SignInWithSpotify from "@/components/SignInWithSpotify";
+import { redirect } from "next/navigation";
+import * as actions from "@/actions";
 import logo from "@/assets/logo.svg";
+import { auth } from "@/auth";
 import Footer from "@/components/Footer";
+import PrimaryButton from "@/components/PrimaryButton";
 
-async function Page() {
-  const cookieStore = cookies();
-  const accessTokenJWTCookie = cookieStore.get("accessTokenJWT");
-  const userCookie = cookieStore.get("user");
+export default async function Home() {
+  const session = await auth();
 
-  // If the user is logged in, redirect them
-  if (accessTokenJWTCookie && userCookie) {
+  // Redirect logged-in users to the /in page
+  if (session?.user) {
     redirect("/in");
   }
 
@@ -22,11 +24,11 @@ async function Page() {
         <p className="mx-10 text-lg md:text-xl lg:text-2xl">
           Create a tooth-brushing playlist from your favorite songs!
         </p>
-        <SignInWithSpotify />
+        <form action={actions.signIn}>
+          <PrimaryButton type="submit">Sign In</PrimaryButton>
+        </form>
       </div>
       <Footer />
     </>
   );
 }
-
-export default Page;

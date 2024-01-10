@@ -1,4 +1,7 @@
-function Footer() {
+/**
+ * Footer with logo attribution, used wherever the logo is used.
+ */
+export default function Footer() {
   return (
     <footer className="w-screen bottom-0 p-3 flex flex-row items-start text-xs">
       <p>
@@ -7,5 +10,3 @@ function Footer() {
     </footer>
   );
 }
-
-export default Footer;

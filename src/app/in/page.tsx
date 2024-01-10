@@ -1,25 +1,23 @@
-import { cookies } from "next/headers";
+/**
+ * Landing page after login, containing User information and a form for playlist generation.
+ */
 import { redirect } from "next/navigation";
-import SettingsForm from "@/components/SettingsForm";
+import { auth } from "@/auth";
+import GenerationForm from "@/components/GenerationForm";
 import UserInfo from "@/components/UserInfo";
 
-async function Page() {
-  const cookieStore = cookies();
-  const accessTokenJWTCookie = cookieStore.get("accessTokenJWT");
-  const userCookie = cookieStore.get("user");
+export default async function In() {
+  const session = await auth();
 
-  // If the user is logged not in, redirect them
-  if (!accessTokenJWTCookie || !userCookie) {
+  // Redirect to homepage if no user is logged in
+  if (!session?.user) {
     redirect("/");
   }
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center font-light">
-      {/*  @ts-expect-error Async Server Component */}
-      <UserInfo user={JSON.parse(userCookie.value)} />
-      <SettingsForm />
+      <UserInfo user={session.user} />
+      <GenerationForm />
     </div>
-  );
+  )
 }
-
-export default Page;
