@@ -24,6 +24,9 @@ export default async function Home() {
         <p className="mx-10 text-lg md:text-xl lg:text-2xl">
           Create a tooth-brushing playlist from your favorite songs!
         </p>
+        <p className="mt-6 mx-10 text-lg md:text-xl lg:text-2xl text-red-500 font-bold">
+          Brushma is currently in Development Mode, and will not work unless you are an authorized user.
+        </p>
         <form action={actions.signIn}>
           <PrimaryButton type="submit">Sign In</PrimaryButton>
         </form>
