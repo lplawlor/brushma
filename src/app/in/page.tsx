@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import GenerationForm from "@/components/GenerationForm";
 import UserInfo from "@/components/UserInfo";
+import SignOut from "@/components/SignOut";
 
 export default async function In() {
   const session = await auth();
@@ -18,6 +19,7 @@ export default async function In() {
     <div className="flex flex-1 flex-col items-center justify-center font-light">
       <UserInfo user={session.user} />
       <GenerationForm />
+      <SignOut />
     </div>
   )
 }

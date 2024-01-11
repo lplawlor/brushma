@@ -5,6 +5,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import * as actions from "@/actions";
 import logo from "@/assets/logo.svg";
+import spotify from "@/assets/spotify.png";
 import { auth } from "@/auth";
 import Footer from "@/components/Footer";
 import PrimaryButton from "@/components/PrimaryButton";
@@ -28,7 +29,9 @@ export default async function Home() {
           Brushma is currently in Development Mode, and will not work unless you are an authorized user.
         </p>
         <form action={actions.signIn}>
-          <PrimaryButton type="submit">Sign In</PrimaryButton>
+          <PrimaryButton type="submit">
+            Log in with <Image height={38} src={spotify} alt="Spotify"/>
+          </PrimaryButton>
         </form>
       </div>
       <Footer />

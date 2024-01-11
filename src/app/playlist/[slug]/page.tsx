@@ -5,10 +5,11 @@
  */
 import Image from "next/image";
 import { Link } from "@nextui-org/react";
-import * as actions from "@/actions";
 import icon from "@/assets/icon.svg"
+import spotify from "@/assets/spotify.png";
 import Footer from "@/components/Footer";
 import PrimaryButton from "@/components/PrimaryButton";
+import SignOut from "@/components/SignOut";
 
 export default function Playlist({ params }: { params: { slug: string } }) {
   const playlistLink = "https://open.spotify.com/playlist/" + params.slug;
@@ -23,11 +24,9 @@ export default function Playlist({ params }: { params: { slug: string } }) {
           as={Link}
           target="_blank"
         >
-          View on Spotify
+          View on <Image height={38} src={spotify} alt="Spotify"/>
         </PrimaryButton>
-        <form action={actions.signOut}>
-          <PrimaryButton type="submit">Sign Out</PrimaryButton>
-        </form>
+        <SignOut />
       </div>
       <Footer />
     </>

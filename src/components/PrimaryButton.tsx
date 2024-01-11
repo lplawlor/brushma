@@ -13,9 +13,8 @@ export default function PrimaryButton({ children, ...props }: ButtonProps) {
         <Button
             isLoading={pending}
             radius="full"
-            variant="ghost"
             color="primary"
-            className="mt-6 p-5 text-lg md:text-xl lg:text-2xl font-medium"
+            className="mt-6 p-7 text-lg md:text-xl lg:text-2xl font-bold"
             {...props}
         >
             {children}

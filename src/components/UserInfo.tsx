@@ -3,8 +3,6 @@
  */
 import Image from "next/image";
 import { User } from "next-auth";
-import * as actions from "@/actions";
-import PrimaryButton from "@/components/PrimaryButton";
 
 export default function UserInfo({ user }: { user: User }) {
   return (
@@ -23,9 +21,6 @@ export default function UserInfo({ user }: { user: User }) {
           </div>
           : null
       }
-      <form action={actions.signOut}>
-        <PrimaryButton type="submit">Sign Out</PrimaryButton>
-      </form>
     </div>
   );
 }
