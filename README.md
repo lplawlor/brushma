@@ -40,9 +40,11 @@ This cookie is stored as a signed JSON Web Token (JWT), which is signed and veri
 
 ## Tools Used
 
-Brushma runs on [Next.js 13.4](https://nextjs.org/blog/next-13-4), using the App Router.
+Brushma runs on [Next.js 14](https://nextjs.org/blog/next-14).
 
-[TailwindCSS](https://tailwindcss.com/) is used across the app for styling.
+Authentication via Spotify uses [Auth.js](https://authjs.dev/) with a customized version of the [Spotify Provider](https://authjs.dev/reference/core/providers/spotify).
+
+[TailwindCSS](https://tailwindcss.com/) is used across the app for styling, with some components from [NextUI](https://nextui.org/).
 
 The Brushma logo was created with [Figma](https://www.figma.com/) using images from [Flaticon.com](https://www.flaticon.com).
 
