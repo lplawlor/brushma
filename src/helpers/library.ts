@@ -149,9 +149,8 @@ export async function getFilteredLibrary(
 
         // Bail (do not retry) if the following status codes are encountered
         if (
-          response.status == 401 || // Bad or expired token
-          response.status == 403 || // Bad OAuth Request
-          response.status == 429 // The app has exceeded its rate limits
+          response.status == 401 // Bad or expired token
+          || response.status == 403 // Bad OAuth Request
         ) {
           bail(new Error(response.statusText));
         }
@@ -174,7 +173,7 @@ export async function getFilteredLibrary(
       },
       {
         retries: 10,
-        minTimeout: 100,
+        minTimeout: 500,
         maxTimeout: 5000,
       }
     );
