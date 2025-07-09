@@ -1,7 +1,8 @@
 /**
  * 404 page containing a link back to the homepage.
  */
-import { Link } from "@nextui-org/react";
+"use client";
+import { Link } from "@heroui/react";
 import PrimaryButton from "@/components/PrimaryButton";
 
 export default function NotFound() {

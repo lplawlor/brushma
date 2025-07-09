@@ -3,7 +3,7 @@
  */
 "use client";
 
-import { Button, ButtonProps } from "@nextui-org/react";
+import { Button, ButtonProps } from "@heroui/react";
 import { useFormStatus } from "react-dom";
 
 export default function PrimaryButton({ children, ...props }: ButtonProps) {

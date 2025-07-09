@@ -4,14 +4,15 @@
  * No slug validation is performed, so really any playlist can be linked to.
  */
 import Image from "next/image";
-import { Link } from "@nextui-org/react";
+import { Link } from "@heroui/react";
 import icon from "@/assets/icon.svg"
 import spotify from "@/assets/spotify.png";
 import Footer from "@/components/Footer";
 import PrimaryButton from "@/components/PrimaryButton";
 import SignOut from "@/components/SignOut";
 
-export default function Playlist({ params }: { params: { slug: string } }) {
+export default async function Playlist(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const playlistLink = "https://open.spotify.com/playlist/" + params.slug;
 
   return (
@@ -24,7 +25,7 @@ export default function Playlist({ params }: { params: { slug: string } }) {
           as={Link}
           target="_blank"
         >
-          View on <Image height={38} src={spotify} alt="Spotify"/>
+          View on <Image height={38} src={spotify} alt="Spotify" />
         </PrimaryButton>
         <SignOut />
       </div>

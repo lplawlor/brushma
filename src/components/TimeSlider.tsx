@@ -5,7 +5,7 @@
  */
 "use client";
 
-import { Slider, SliderValue } from "@nextui-org/react";
+import { Slider, SliderValue } from "@heroui/react";
 import { SetStateAction, useState, Dispatch } from "react";
 
 export default function TimeSlider() {

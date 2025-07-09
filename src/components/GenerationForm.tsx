@@ -5,14 +5,14 @@
  */
 "use client"
 
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import * as actions from "@/actions";
 import PrimaryButton from "@/components/PrimaryButton";
 import TimeSlider from "@/components/TimeSlider";
 
 export default function GenerationForm() {
   // Use the generatePlaylist server-action wrapped by the useFormState hook to display error messages
-  const [formState, action] = useFormState(actions.generatePlaylist, null);
+  const [formState, action] = useActionState(actions.generatePlaylist, null);
 
   return (
     <form

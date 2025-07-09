@@ -11,7 +11,7 @@ if (!SPOTIFY_CLIENT_ID || !SPOTIFY_CLIENT_SECRET) {
   throw new Error("Missing Spotify OAuth credentials in .env.local");
 }
 
-export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Spotify({
       clientId: SPOTIFY_CLIENT_ID,
